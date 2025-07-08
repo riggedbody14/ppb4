@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Buy Now, Pay Later Phones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;600;400&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      width: 100vw; min-height: 100vh;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(135deg, #e6f0fd 0%, #fff 90%);
+      color: #232c42;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 410px; margin: 0 auto; padding: 20px 4vw 0 4vw;
+      min-height: 100vh; box-sizing: border-box;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .title {
+      font-size: 2.1rem; font-weight: 800; margin: 24px 0 20px 0; text-align: center;
+      color: #1154b6; letter-spacing: .5px;
+      text-shadow: 0 1px 12px #b7e7ff44;
+    }
+    .phone-preview {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      margin-bottom: 30px; transition: .25s;
+      min-height: 195px;
+    }
+    .phone-img {
+      width: 106px; height: 140px; object-fit: contain;
+      filter: drop-shadow(0 8px 24px #b5dfff99);
+      margin-bottom: 15px;
+      transition: .25s;
+      user-select: none;
+      pointer-events: none;
+    }
+    .phone-title {
+      font-size: 1.18rem; font-weight: 700; color: #2d3d6b;
+      margin-bottom: 2px;
+      letter-spacing: .2px;
+    }
+    .price-row {
+      font-size: 1.26rem; font-weight: 700;
+      display: flex; align-items: center; gap: 17px;
+      margin: 0 0 3px 0;
+    }
+    .old-price {
+      color: #ec3838; opacity: 0.6;
+      text-decoration: line-through;
+      font-weight: 600;
+    }
+    .new-price {
+      color: #24bb3a; background: #e8ffe8; border-radius: 7px;
+      padding: 2px 15px; font-size: 1.32rem; font-weight: 800; margin-left: 8px;
+      border: 2.5px solid #30dc71;
+      box-shadow: 0 2px 9px #7fffc355;
+    }
+    /* --- Слайдер телефонів --- */
+    .slider-wrap {
+      width: 100%; margin-bottom: 26px;
+      display: flex; align-items: center; justify-content: center; gap: 18px;
+    }
+    .slider-btn {
+      background: none; border: none; outline: none; color: #227fff;
+      font-size: 2.1rem; cursor: pointer; border-radius: 50%; width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center; font-weight: bold;
+      box-shadow: 0 2px 10px #92e2ff55;
+      transition: background .17s;
+    }
+    .slider-btn:active { background: #e0f5ff; }
+    .slider-value {
+      font-size: 1.1rem; font-weight: 600; color: #227fff;
+      padding: 6px 0; min-width: 60px; text-align: center;
+      letter-spacing: .2px;
+    }
+    /* --- Dropdown --- */
+    .dropdown-wrap {
+      width: 100%; margin-bottom: 32px; display: flex; flex-direction: column; align-items: center;
+    }
+    .dropdown-label {
+      font-size: 1rem; color: #5a7899; font-weight: 700; margin-bottom: 7px;
+    }
+    select {
+      width: 80%; max-width: 210px; padding: 12px 12px; border-radius: 11px;
+      border: 2.2px solid #cde6ff; background: #f6faff;
+      font-size: 1.07rem; font-family: inherit;
+      font-weight: 600; outline: none;
+      box-shadow: 0 2px 13px #deecfa36;
+      margin-bottom: 2px;
+      transition: border .19s;
+    }
+    select:focus { border: 2.2px solid #227fff; }
+    .confirm-btn {
+      width: 97%; max-width: 330px; padding: 17px; border-radius: 16px;
+      background: linear-gradient(90deg, #24bb3a, #227fff 80%);
+      color: #fff; font-size: 1.18rem; font-weight: 800; border: none;
+      margin-top: 14px; margin-bottom: 18px;
+      box-shadow: 0 4px 30px #68d1ff59;
+      letter-spacing: .8px;
+      cursor: pointer;
+      transition: background .14s;
+    }
+    .confirm-btn:active { background: linear-gradient(90deg, #227fff, #24bb3a 90%);}
+    /* --- Loader/Success --- */
+    .modal-bg {
+      position: fixed; top:0; left:0; width:100vw; height:100vh;
+      background: rgba(19,34,58,0.17); z-index:100; display: flex; align-items: center; justify-content: center;
+    }
+    .modal-window {
+      background: #fff; border-radius: 18px;
+      padding: 40px 10vw 34px 10vw; min-width: 210px; max-width:97vw;
+      box-shadow: 0 10px 44px #96deff3c;
+      display:flex; flex-direction:column; align-items:center; font-size:1.15rem;
+      font-weight:700; color:#24bb3a;
+      text-align: center; letter-spacing:0.5px;
+      font-family: inherit;
+      animation: modalPop .25s cubic-bezier(.6,1.3,.55,1.05);
+    }
+    @keyframes modalPop { 0%{transform:scale(.7); opacity:.2;} 100%{transform:scale(1);opacity:1;}}
+    .loader-spinner {
+      margin-bottom:18px;
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 6px solid #abe2f8;
+      border-top: 6px solid #227fff;
+      animation: spin 1.1s linear infinite;
+    }
+    @keyframes spin {100%{transform: rotate(360deg);}}
+    .approved {
+      font-size: 2.3em; margin-bottom: 12px; color: #24bb3a;
+      animation: bounceIn .9s cubic-bezier(.45,1.9,.45,1.2);
+    }
+    @keyframes bounceIn {
+      0%{transform:scale(.7); opacity:.5;}
+      60%{transform:scale(1.23);}
+      90%{transform:scale(.93);}
+      100%{transform:scale(1);}
+    }
+    @media (max-width: 510px) {
+      .container { max-width: 100vw; }
+      .phone-img {width: 85px; height: 110px;}
+      .phone-title {font-size: 1.07rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="mainContainer">
+    <div class="title">Buy Now, Pay Later Phones</div>
+    <div class="phone-preview">
+      <img id="phoneImg" class="phone-img" src="" alt="Phone">
+      <div class="phone-title" id="phoneTitle"></div>
+      <div class="price-row">
+        <span class="old-price" id="oldPrice"></span>
+        <span class="new-price">0 💳</span>
+      </div>
+    </div>
+    <div class="slider-wrap">
+      <button class="slider-btn" id="sliderPrev">&#9664;</button>
+      <div class="slider-value" id="sliderValue"></div>
+      <button class="slider-btn" id="sliderNext">&#9654;</button>
+    </div>
+    <div class="dropdown-wrap">
+      <div class="dropdown-label">Installment period</div>
+      <select id="periodSelect">
+        <option value="1">1 month</option>
+        <option value="2">2 months</option>
+        <option value="6">6 months</option>
+        <option value="12">12 months</option>
+        <option value="18">18 months</option>
+        <option value="24">24 months</option>
+      </select>
+    </div>
+    <button class="confirm-btn" id="confirmBtn">Confirm</button>
+  </div>
+  <!-- Modal window for loading & approval -->
+  <div class="modal-bg" id="modalBg" style="display:none;">
+    <div class="modal-window" id="modalWin">
+      <div class="loader-spinner" id="modalSpinner"></div>
+      <div id="modalText">Processing your request...</div>
+    </div>
+  </div>
+  <script>
+    // --- Demo phones data ---
+    const phones = [
+      {
+        title: "iPhone SE (2022)",
+        img: "https://smartspot.lt/wp-content/uploads/2023/10/Red_5-Carousel.png",
+        price: 12999
+      },
+      {
+        title: "Samsung Galaxy S21 FE",
+        img: "https://i.ibb.co/KjX1nV3S/samsung-galaxy-s21-fe-5g-15-removebg-preview.png",
+        price: 18999
+      },
+      {
+        title: "iPhone 13",
+        img: "https://applehome.te.ua/wp-content/uploads/2021/09/iphone-13-blue-select-2021.png",
+        price: 28999
+      },
+      {
+        title: "Samsung Galaxy S23 Ultra",
+        img: "https://20854386.fs1.hubspotusercontent-na1.net/hubfs/20854386/consumer/products/samsung-galaxy-s23-ultra-color/samsung-galaxy-s23-ultra-lavender.png",
+        price: 42999
+      },
+      {
+        title: "iPhone 15 Pro Max",
+        img: "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png",
+        price: 62999
+      }
+    ];
+    let idx = 0;
+    function showPhone() {
+      let p = phones[idx];
+      document.getElementById('phoneImg').src = p.img;
+      document.getElementById('phoneTitle').textContent = p.title;
+      document.getElementById('oldPrice').textContent = `${p.price.toLocaleString()} 🪙`;
+      document.querySelector('.new-price').textContent = `0 🪙`;
+      document.getElementById('sliderValue').textContent = `${p.title}`;
+    }
+    showPhone();
+    document.getElementById('sliderPrev').onclick = ()=>{
+      idx = (idx-1+phones.length)%phones.length;
+      showPhone();
+    };
+    document.getElementById('sliderNext').onclick = ()=>{
+      idx = (idx+1)%phones.length;
+      showPhone();
+    };
+    // --- Confirm, loader, approve ---
+    document.getElementById('confirmBtn').onclick = ()=>{
+      document.getElementById('modalBg').style.display = "flex";
+      document.getElementById('modalSpinner').style.display = "block";
+      document.getElementById('modalText').innerHTML = "Processing your request...";
+      setTimeout(()=>{
+        document.getElementById('modalSpinner').style.display = "none";
+        document.getElementById('modalText').innerHTML = `<div class="approved">✔️</div>
+          <div style="font-size:1.13em;color:#1e8728;font-weight:800;margin-bottom:8px;">
+          Approved!</div>
+          <div style="color:#2d3d6b;">You may pick up your new phone now!</div>`;
+      }, 2100);
+      setTimeout(()=>{
+        document.getElementById('modalBg').style.display = "none";
+      }, 4000);
+    };
+    // Можна закривати по кліку по бекдропу
+    document.getElementById('modalBg').onclick = e => {
+      if (e.target === document.getElementById('modalBg'))
+        document.getElementById('modalBg').style.display = "none";
+    };
+  </script>
+</body>
+</html>
